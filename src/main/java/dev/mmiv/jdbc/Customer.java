@@ -1,9 +1,9 @@
 package dev.mmiv.jdbc;
 
 public class Customer {
-    private int id;
-    private String firstName;
-    private String lastName;
+    private final int id;
+    private final String firstName;
+    private final String lastName;
 
     public Customer(int id, String firstName, String lastName) {
         this.id = id;
@@ -14,7 +14,7 @@ public class Customer {
     @Override
     public String toString() {
         return String.format(
-            "Customer[id=%d, firstName=%'s', lastName=%'s']",
+            "Customer[id=%d, firstName='%s', lastName='%s']",
                 id, firstName, lastName);
     }
 }

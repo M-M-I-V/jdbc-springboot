@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 @SpringBootApplication
 public class RelationalDataAccessApplication implements CommandLineRunner {
 
-	private static final Logger log = LoggerFactory.getLogger(RelationalDataAccessApplication.class, args);
+	private static final Logger log = LoggerFactory.getLogger(RelationalDataAccessApplication.class);
 
 	public static void main(String[] args) {
 		SpringApplication.run(RelationalDataAccessApplication.class, args);
@@ -25,7 +25,7 @@ public class RelationalDataAccessApplication implements CommandLineRunner {
 	JdbcTemplate jdbcTemplate;
 
 	@Override
-	public void run(String strings) throws Exception {
+	public void run(String... strings) throws Exception {
 		log.info("Creating tables");
 
 		jdbcTemplate.execute("DROP TABLE customers IF EXISTS");
