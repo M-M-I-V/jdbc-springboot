@@ -25,15 +25,14 @@ public class RelationalDataAccessApplication implements CommandLineRunner {
 	JdbcTemplate jdbcTemplate;
 
 	@Override
-	public void run(String... strings) throws Exception {
+	public void run(String... args) throws Exception {
 		log.info("Creating tables");
 
-		jdbcTemplate.execute("DROP TABLE customers IF EXISTS");
+		jdbcTemplate.execute("DROP TABLE IF EXISTS customers");
 		jdbcTemplate.execute("CREATE TABLE customers (" +
-									"id INT AUTO_INCREMENT PRIMARY KEY " +
-									"first_name VARCHAR(100) " +
-									"last_name VARCHAR(100) " +
-								")");
+				"id INT AUTO_INCREMENT PRIMARY KEY, " +
+				"first_name VARCHAR(100), " +
+				"last_name VARCHAR(100))");
 
 		List<Object[]> splitUpNames = Arrays.asList("John Woo", "Jeff Dean", "Josh Bloch", "Josh Long").stream()
 				.map(name -> name.split(" "))
@@ -45,8 +44,9 @@ public class RelationalDataAccessApplication implements CommandLineRunner {
 
 		log.info("Querying for customer records where first_name = 'Josh':");
 		jdbcTemplate.query(
-						"SELECT id, first_name, last_name FROM customers WHERE first_name = ?",
-						(rs, rowNum) -> new Customer(rs.getInt("id"), rs.getString("first_name"), rs.getString("last_name")), "Josh")
-				.forEach(customer -> log.info(customer.toString()));
+				"SELECT id, first_name, last_name FROM customers WHERE first_name = ?",
+				(rs, rowNum) -> new Customer(rs.getInt("id"), rs.getString("first_name"), rs.getString("last_name")),
+				"Josh"
+		).forEach(customer -> log.info(customer.toString()));
 	}
 }

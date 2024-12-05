@@ -1,5 +1,7 @@
 package dev.mmiv.jdbc;
 
+import java.util.Objects;
+
 public class Customer {
     private final int id;
     private final String firstName;
@@ -11,10 +13,37 @@ public class Customer {
         this.lastName = lastName;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
     @Override
     public String toString() {
         return String.format(
-            "Customer[id=%d, firstName='%s', lastName='%s']",
+                "Customer[id=%d, firstName='%s', lastName='%s']",
                 id, firstName, lastName);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Customer customer = (Customer) o;
+        return id == customer.id &&
+                Objects.equals(firstName, customer.firstName) &&
+                Objects.equals(lastName, customer.lastName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, firstName, lastName);
     }
 }
