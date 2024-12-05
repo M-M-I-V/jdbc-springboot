@@ -13,9 +13,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @SpringBootApplication
-public class RelationalDataAccessApplication {
+public class RelationalDataAccessApplication implements CommandLineRunner {
 
-	private static final Logger log = LoggerFactory.getLogger(RelationalDataAccessApplication.class);
+	private static final Logger log = LoggerFactory.getLogger(RelationalDataAccessApplication.class, args);
 
 	public static void main(String[] args) {
 		SpringApplication.run(RelationalDataAccessApplication.class, args);
@@ -34,5 +34,19 @@ public class RelationalDataAccessApplication {
 									"first_name VARCHAR(100) " +
 									"last_name VARCHAR(100) " +
 								")");
+
+		List<Object[]> splitUpNames = Arrays.asList("John Woo", "Jeff Dean", "Josh Bloch", "Josh Long").stream()
+				.map(name -> name.split(" "))
+				.collect(Collectors.toList());
+
+		splitUpNames.forEach(name -> log.info(String.format("Inserting customer record for %s %s", name[0], name[1])));
+
+		jdbcTemplate.batchUpdate("INSERT INTO customers(first_name, last_name) VALUES (?,?)", splitUpNames);
+
+		log.info("Querying for customer records where first_name = 'Josh':");
+		jdbcTemplate.query(
+						"SELECT id, first_name, last_name FROM customers WHERE first_name = ?",
+						(rs, rowNum) -> new Customer(rs.getInt("id"), rs.getString("first_name"), rs.getString("last_name")), "Josh")
+				.forEach(customer -> log.info(customer.toString()));
 	}
 }
